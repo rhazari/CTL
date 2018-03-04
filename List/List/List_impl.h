@@ -101,6 +101,7 @@ inline T& List<T>::at(const size_t index) {
         if (id == index)
             return ptr->m_data;
         ptr = ptr->m_next;
+        ++id;
     }
 }
 
@@ -114,7 +115,46 @@ inline const T& List<T>::at(const size_t index) const {
         if (id == index)
             return ptr->m_data;
         ptr = ptr->m_next;
+        ++id;
     }
+}
+
+template <typename T>
+inline T& List<T>::operator[] (const size_t index) {
+    if (index >= count)
+        throw std::runtime_error("Index out of bounds");
+    size_t id = 0;
+    ListNode<T>* ptr = m_head;
+    while (ptr) {
+        if (id == index)
+            return ptr->m_data;
+        ptr = ptr->m_next;
+        ++id;
+    }
+}
+
+template <typename T>
+inline const T& List<T>::operator[] (const size_t index) const {
+    if (index >= count)
+        throw std::runtime_error("Index out of bounds");
+    size_t id = 0;
+    ListNode<T>* ptr = m_head;
+    while (ptr) {
+        if (id == index)
+            return ptr->m_data;
+        ptr = ptr->m_next;
+        ++id;
+    }
+}
+
+template <typename T>
+inline typename List<T>::iterator List<T>::begin() {
+    return iterator(m_head);
+}
+
+template <typename T>
+inline typename List<T>::iterator List<T>::end() {
+    return iterator(m_tail);
 }
 
 template <typename T>

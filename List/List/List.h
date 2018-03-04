@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <cstddef>
+#include <iterator>
 #include <stdexcept>
 
 template <typename T>
@@ -31,6 +33,50 @@ private:
 
 public:
 
+    class iterator
+    {
+    public:
+        using value_type = T;
+        using reference = T&;
+        using pointer = T*;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        iterator(ListNode<T>* ptr) : _ptr(ptr) { }
+
+        iterator operator++() {
+            assert(_ptr != nullptr && "Out-of-bounds iterator increment!");
+            _ptr = _ptr->m_next;
+            return *this;
+        }
+
+        iterator operator++(int junk) {
+            assert(_ptr != nullptr && "Out-of-bounds iterator increment!");
+            iterator temp(*this);
+            _ptr = _ptr->m_next;
+            return temp;
+        }
+
+        reference operator*() {
+            assert(_ptr != nullptr && "Invalid iterator dereference!");
+            return _ptr->m_data;
+        }
+
+        pointer operator->() {
+            assert(_ptr != nullptr && "Invalid iterator dereference!");
+            return _ptr->m_data;
+        }
+
+        bool operator==(const iterator& rhs) const {
+            return _ptr == rhs._ptr;
+        }
+
+        bool operator!=(const iterator& rhs) const {
+            return _ptr != rhs._ptr;
+        }
+    private:
+        ListNode<T>* _ptr;
+    };
+
     List<T>();
 
     //List<T>(const List<T>& list);
@@ -53,22 +99,6 @@ public:
 
     void print();
 
-    /* Iterators */
-    using iterator = T* ;
-    using const_iterator = const T*;
-
-    const_iterator begin() const;
-    iterator begin();
-
-    const_iterator end() const;
-    iterator end();
-
-    const_iterator rbegin() const;
-    iterator rbegin();
-
-    const_iterator rend() const;
-    iterator rend();
-
     /* Capacity */
     size_t size() const;
     bool empty() const;
@@ -85,6 +115,10 @@ public:
 
     T& operator[](const size_t index);
     const T& operator[](const size_t index) const;
+
+    iterator begin();
+
+    iterator end();
 };
 
 #include "List_impl.h"
